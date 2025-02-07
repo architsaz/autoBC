@@ -1,0 +1,6 @@
+/bin
+/test
+/temp
+*.png
+*.vtk
+*.dat
