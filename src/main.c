@@ -6,8 +6,14 @@
 #include "common.h"
 #include "hashtable.h"
 
-int main (void){
-    char path [] = {"a06161.1.flds.zfem"};
+int main(int argc, char *argv[])
+{
+    char path [200];
+    strcpy(path,argv[1]);
+    strcat(path,".flds.zfem");
+    if (argc!=2){
+        fprintf(stderr,"ERROR: number of argc should be 2 (now is %d)\n",argc);
+    }
     int npoin,nelem,*elems;
     double *ptxyz;
     read_zfem(path,&npoin,&nelem,&ptxyz,&elems);
@@ -227,17 +233,18 @@ int main (void){
     strcpy(M1->type, "tri");
     M1->nrpts = 3;
     M1->elems =elems;M1->npoin =npoin;M1->nelem=nelem;M1->esure=esure;M1->esurp=esurp;M1->esurp_ptr=esurp_ptr;M1->nredge=Nredge;M1->open=open;M1->ptxyz=ptxyz;
-    
     // save all data of mesh and data struture in VTK format
     FunctionWithArgs prtelefield[] =
         {
-            {"open", 1, nelem, open, SCA_int_VTK},
             {"bc_mask", 1, nelem, hole_mask, SCA_int_VTK},
         };
     size_t countele = sizeof(prtelefield) / sizeof(prtelefield[0]);
     FunctionWithArgs prtpntfield[] = {0};
     size_t countpnt = 0;
-    CHECK_ERROR(SaveVTK("./", "checkmesh", 0, M1, tri3funcVTK, prtelefield, countele, prtpntfield, countpnt));
+    char name[100];
+    strcpy(name,argv[1]);
+    strcat(name,".BC");
+    CHECK_ERROR(SaveVTK("./", name, 0, M1, tri3funcVTK, prtelefield, countele, prtpntfield, countpnt));
     // allocated memory
     free(elems);
     free(ptxyz);

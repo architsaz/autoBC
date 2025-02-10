@@ -69,3 +69,5 @@ mdl_dir=$(find /dagon1/jcebral/aneuDB/db.R01/db.*/ -maxdepth 1 -name $casename)/
         echo "ERROR: inlet or outlet files did not generated for $casename"
         exit 1  # Failure signal
     fi
+# creat mask file
+/dagon1/achitsaz/mylib/EXECs/EXEC_autoBC $casename
