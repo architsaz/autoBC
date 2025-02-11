@@ -211,13 +211,17 @@ int main(int argc, char *argv[])
 	    freeTable(&table);
     }else{
         fprintf(stderr,"WARNING: save Boundary Condition mask without correction file!\n");
+        for (int i=1;i<=num_inlet;i++) mask_value[i] = 1 ;
+        for (int i=1;i<=num_outlet;i++) mask_value[num_inlet+i] = 2 ;
     }
     #ifdef DEBUG
     for(int i=0;i<num_all_holes;i++)
     printf("- value of hole id %d is %d\n",i,mask_value[i]);
     #endif
+    int *bc_mask = (int *)calloc((size_t)nelem,sizeof(int));
+    memcpy(bc_mask, hole_mask, nelem*sizeof(int)); 
     for (int ele=0;ele<nelem;ele++){
-        if (hole_mask[ele] != 0 ) hole_mask[ele]=mask_value[hole_mask[ele]];
+        if (bc_mask[ele] != 0 ) bc_mask[ele]=mask_value[bc_mask[ele]];
     }
     // creat mesh struct 
     mesh *M1 = (mesh *)malloc(sizeof(mesh));
@@ -236,7 +240,8 @@ int main(int argc, char *argv[])
     // save all data of mesh and data struture in VTK format
     FunctionWithArgs prtelefield[] =
         {
-            {"bc_mask", 1, nelem, hole_mask, SCA_int_VTK},
+            {"holes_mask", 1, nelem, hole_mask, SCA_int_VTK},
+            {"bc_mask", 1, nelem, bc_mask, SCA_int_VTK}
         };
     size_t countele = sizeof(prtelefield) / sizeof(prtelefield[0]);
     FunctionWithArgs prtpntfield[] = {0};
