@@ -22,7 +22,7 @@ mdl_dir=$(find /dagon1/jcebral/aneuDB/db.R01/db.*/ -maxdepth 1 -name $casename)/
    if [ -e $mdl_dir/$surf ]; then
       cp $mdl_dir/$surf  . 2>/dev/null
    else
-      if [ -e mdl/$surf.gz ]; then
+      if [ -e $mdl_dir/$surf.gz ]; then
           cp $mdl_dir/$surf.gz  . 2>/dev/null
       else
           cp $(find /dagon1/jcebral/aneuDB/db.R01/db.*/ -maxdepth 1 -name $casename)/bld/$surf  . 2>/dev/null
